@@ -24,9 +24,35 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api/:date", function (req, res) {
+  const  date = new Date(req.params.date);
+  const utc = getUtcTime(date);
+  res.json({
+    unix: Math.round( date.getTime()),
+    utc: utc
+  });
+});
 
+function getUtcTime(date) { 
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const h = addZero(date.getUTCHours(), 2);
+  const m = addZero(date.getUTCMinutes(), 2);
+  const s = addZero(date.getUTCSeconds(), 2);
+  
+  const utc = days[date.getUTCDay()]+", "+ date.getUTCDate() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear() + " " + h + ':' + m + ':' + s + ' GMT';
+
+  return utc;
+}
+
+function addZero(x,n) {
+  while (x.toString().length < n) {
+    x = "0" + x;
+  }
+  return x;
+}
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(process.env.PORT || 3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
