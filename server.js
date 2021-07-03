@@ -25,6 +25,7 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date", function (req, res) {
   let dateString = req.params.date;
+  console.log(dateString);
   let date = null;
   if (/\d{5,}/.test(dateString)) {
     let dateInt = parseInt(dateString);
@@ -44,6 +45,15 @@ app.get("/api/:date", function (req, res) {
       utc: date.toUTCString(),
     });
   }
+});
+
+app.get("/api/", (req, res) => {
+  const date = new Date();
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
 });
 
 function getUtcTime(date) {
